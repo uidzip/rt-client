@@ -22,4 +22,4 @@ require "rt_client"
 ```
 
 # Documentation
-For usage documentation, see [http://www.rubydoc.info/gems/rt-client/1.0.0]
+For usage documentation, see [http://www.rubydoc.info/gems/rt-client/1.0.0/RT_Client]
