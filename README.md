@@ -19,3 +19,7 @@ TODO: Streaming, chunking attachments in compose method
 See each method for sample usage.  To use this, "gem install rt-client" and
 ```ruby
 require "rt_client"
+```
+
+# Documentation
+For usage documentation, see [http://www.rubydoc.info/gems/rt-client/1.0.0]
