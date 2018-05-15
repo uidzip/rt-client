@@ -38,7 +38,7 @@ require 'pp'
 
 class RT_Client
 
-  UA = "Mozilla/5.0 ruby RT Client Interface 1.0.0"
+  UA = "Mozilla/5.0 ruby RT Client Interface 1.0.1"
   attr_reader :status, :site, :version, :cookies, :server, :user, :cookie
 
   # Create a new RT_Client object. Load up our stored cookie and check it.
