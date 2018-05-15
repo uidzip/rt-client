@@ -70,7 +70,6 @@ class RT_Client
   #  pass=<RT password>
   #  cookies=<directory>
   def initialize(*params)
-    @boundary = "----xYzZY#{rand(1000000).to_s}xYzZY"
     @version = "1.0.0"
     @status = "Not connected"
     @server = "http://localhost/"
@@ -138,8 +137,7 @@ class RT_Client
     end
     
     headers = { 'User-Agent'   => UA,
-      'Content-Type' => "multipart/form-data; boundary=#{@boundary}",
-      'Cookie'       => @cookie }
+                'Cookie'       => @cookie }
     @site = RestClient::Resource.new(@resource, :headers => headers, :verify_ssl => false)
     @status = data
     self.untaint
