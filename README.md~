@@ -11,9 +11,9 @@ Thanks to the following members of the RT community for patches:
 * Brian McArdle for patch dealing with spaces in Custom Fields (use '_')
 * Steven Craig for a bug fix and feature additions to the usersearch() method.
 * Rafael Abdo for fixing a broken regex.
+
 * Extra Special Thanks to Robert Vinson for 1.9.x compatibility and refactoring the old mess into something with much fewer
 dependencies.
-* Steven Hansen for patch dealing with modern versions of rest-client.
 
 TODO: Streaming, chunking attachments in compose method
 

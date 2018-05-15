@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rt-client"
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.files = ['rt_client.rb','rtxmlsrv.rb','rtxmlsrv2.rb','rt/client.rb','.yardopts']
   s.authors = ["Tom Lahti"]
