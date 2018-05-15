@@ -781,7 +781,7 @@ class RT_Client
 
   # helper to convert responses from RT REST to a hash
   def response_to_h(resp) # :nodoc:
-    resp.gsub!(/RT\/\d+\.\d+\.\d+\s\d{3}\s.*\n\n/,"") # toss the HTTP response
+    resp = resp.body.gsub(/RT\/\d+\.\d+\.\d+\s\d{3}\s.*\n\n/,"") # toss the HTTP response
 
     # unfold folded fields
     # A newline followed by one or more spaces is treated as a
