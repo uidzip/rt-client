@@ -1,3 +1,5 @@
+.gitignore~
+*gempspec~
 *.gem
 *.rbc
 /.config
