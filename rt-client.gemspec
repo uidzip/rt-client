@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
 
   s.files = ['rt_client.rb','rtxmlsrv.rb','rtxmlsrv2.rb','rt/client.rb','.yardopts']
   s.authors = ["Tom Lahti"]
+  s.email = 'uidzip@gmail.com'
   s.date = "2016-10-31"
   s.description = "RT_Client is a ruby object that accesses the REST interface version 1.0\n    of a Request Tracker instance.  See http://www.bestpractical.com/ for\n    Request Tracker.\n"
   s.email = "tlahti@dmsolutions.com"
