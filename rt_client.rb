@@ -38,7 +38,7 @@ require 'pp'
 
 class RT_Client
 
-  UA = "Mozilla/5.0 ruby RT Client Interface 1.0.0"
+  UA = "Mozilla/5.0 ruby RT Client Interface 1.0.1"
   attr_reader :status, :site, :version, :cookies, :server, :user, :cookie
 
   # Create a new RT_Client object. Load up our stored cookie and check it.
@@ -70,7 +70,6 @@ class RT_Client
   #  pass=<RT password>
   #  cookies=<directory>
   def initialize(*params)
-    @boundary = "----xYzZY#{rand(1000000).to_s}xYzZY"
     @version = "1.0.0"
     @status = "Not connected"
     @server = "http://localhost/"
@@ -138,8 +137,7 @@ class RT_Client
     end
     
     headers = { 'User-Agent'   => UA,
-      'Content-Type' => "multipart/form-data; boundary=#{@boundary}",
-      'Cookie'       => @cookie }
+                'Cookie'       => @cookie }
     @site = RestClient::Resource.new(@resource, :headers => headers, :verify_ssl => false)
     @status = data
     self.untaint
@@ -783,7 +781,7 @@ class RT_Client
 
   # helper to convert responses from RT REST to a hash
   def response_to_h(resp) # :nodoc:
-    resp.gsub!(/RT\/\d+\.\d+\.\d+\s\d{3}\s.*\n\n/,"") # toss the HTTP response
+    resp = resp.body.gsub(/RT\/\d+\.\d+\.\d+\s\d{3}\s.*\n\n/,"") # toss the HTTP response
 
     # unfold folded fields
     # A newline followed by one or more spaces is treated as a
