@@ -125,11 +125,7 @@ class RT_Client
       @cookie = ""
     end
 
-    if @verify_ssl.casecmp('true') == 0
-      @verify_ssl = true
-    else
-      @verify_ssl = false
-    end
+    @verify_ssl = (@verify_ssl.casecmp('true') == 0)
 
     site = RestClient::Resource.new(@resource, :headers => headers, :timeout => @timeout.to_i, :verify_ssl => @verify_ssl)
     data = site.post "" # a null post just to check that we are logged in
