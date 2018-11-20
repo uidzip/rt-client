@@ -55,12 +55,15 @@ class RT_Client
   # is used.  If no parameters are specified either explicity or by use
   # of a .rtclientrc, then the defaults of "rt_user", "rt_pass" are used
   # with a default server of "http://localhost", and cookies are stored
-  # in the directory where the library resides.
+  # in the directory where the library resides. Default timeout is 240
+  # seconds and SSL certificate validation is disabled by default.
   #
   #  rt= RT_Client.new( :server  => "https://tickets.ambulance.com/",
   #                     :user    => "rt_user",
   #                     :pass    => "rt_pass",
-  #                     :cookies => "/my/cookie/dir" )
+  #                     :cookies => "/my/cookie/dir",
+  #                     :timeout => 240,
+  #                     :verify_ssl => false )
   #
   #  rt= RT_Client.new # use defaults from .rtclientrc
   #
@@ -69,6 +72,8 @@ class RT_Client
   #  user=<RT user>
   #  pass=<RT password>
   #  cookies=<directory>
+  #  timeout=<integer in seconds>
+  #  verify_ssl=<true or false>
   def initialize(*params)
     @version = "1.0.2"
     @status = "Not connected"
@@ -76,6 +81,8 @@ class RT_Client
     @user = "rt_user"
     @pass = "rt_pass"
     @cookies = Dir.pwd
+    @timeout = 240
+    @verify_ssl = false
     config_file = Dir.pwd + "/.rtclientrc"
     config = ""
     if File.file?(config_file)
@@ -88,6 +95,8 @@ class RT_Client
     @user = $~[1] if config =~ /^\s*user\s*=\s*(.*)$/i
     @pass = $~[1] if config =~ /^\s*pass\s*=\s*(.*)$/i
     @cookies = $~[1] if config =~ /\s*cookies\s*=\s*(.*)$/i
+    @timeout = $~[1] if config =~ /\s*timeout\s*=\s*(.*)$/i
+    @verify_ssl = $~[1] if config =~ /\s*verify_ssl\s*=\s*(.*)$/i
     @resource = "#{@server}REST/1.0/"
     if params.class == Array && params[0].class == Hash
       param = params[0]
@@ -99,6 +108,8 @@ class RT_Client
         @resource = "#{@server}REST/1.0/"
       end
       @cookies  = param[:cookies] if param.has_key? :cookies
+      @timeout = param[:timeout] if param.has_key? :timeout
+      @verify_ssl = param[:verify_ssl] if param.has_key? :verify_ssl
     end
     @login = { :user => @user, :pass => @pass }
     cookiejar = "#{@cookies}/RT_Client.#{@user}.cookie" # cookie location
@@ -114,7 +125,9 @@ class RT_Client
       @cookie = ""
     end
 
-    site = RestClient::Resource.new(@resource, :headers => headers, :timeout => 240, :verify_ssl => false)
+    @verify_ssl = (@verify_ssl.casecmp('true') == 0)
+
+    site = RestClient::Resource.new(@resource, :headers => headers, :timeout => @timeout.to_i, :verify_ssl => @verify_ssl)
     data = site.post "" # a null post just to check that we are logged in
 
     if @cookie.length == 0 or data =~ /401/ # we're not logged in
@@ -135,13 +148,13 @@ class RT_Client
         f.close
       end
     end
-    
+
     headers = { 'User-Agent'   => UA,
                 'Cookie'       => @cookie }
-    @site = RestClient::Resource.new(@resource, :headers => headers, :verify_ssl => false)
+    @site = RestClient::Resource.new(@resource, :headers => headers, :timeout => @timeout.to_i, :verify_ssl => @verify_ssl)
     @status = data
     self.untaint
-    
+
   end
 
   # gets the detail for a single ticket/user.  If its a ticket, its without
@@ -442,15 +455,15 @@ class RT_Client
     replies
   end
 
-  # Get a list of history transactions for a ticket.  Takes a ticket ID, 
-  # an optional format parameter, and a optional comments parameter.  If 
-  # the format is ommitted, the short  format is assumed.  If the short 
-  # format is requested, it returns an array of 2 element arrays, where 
-  # each 2-element array is [ticket_id, description].  If the long format 
-  # is requested, it returns an array of hashes, where each hash contains 
-  # the keys listed below.  If the optional 'comments' parameter is supplied 
+  # Get a list of history transactions for a ticket.  Takes a ticket ID,
+  # an optional format parameter, and a optional comments parameter.  If
+  # the format is ommitted, the short  format is assumed.  If the short
+  # format is requested, it returns an array of 2 element arrays, where
+  # each 2-element array is [ticket_id, description].  If the long format
+  # is requested, it returns an array of hashes, where each hash contains
+  # the keys listed below.  If the optional 'comments' parameter is supplied
   # and set to 'true', comments are included in the list of history items.
-  # If 'comments' is omitted, it is assumed to be 'false' and all history 
+  # If 'comments' is omitted, it is assumed to be 'false' and all history
   # items related to comments are stripped from the response.
   #
   # id::           (history-id)
@@ -887,5 +900,3 @@ class RT_Client
   end
 
 end
-
-
