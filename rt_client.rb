@@ -238,6 +238,21 @@ class RT_Client
     new_ticket # return the ticket number, or the full REST response
   end
 
+  # Merges a ticket into another one. :id is the ticket id to be merged
+  # :tid is the target ticket's id to be merged into.
+  #  id = rt.merge( :id  => id,
+  #                 :tid => tid )
+
+  def merge(id_hash)
+    if id_hash.has_key? :id and id_hash.has_key? :tid
+      id  = id_hash[:id]
+      tid = id_hash[:tid]
+    else
+      raise "RT_Client.merge requires a Ticket number in the 'id' key and a target ticket id in the 'tid' key."
+    end
+    @site["ticket/#{id}/merge/#{tid}"].get
+  end
+
   # create a new user.  Requires a hash of RT fields => values. Returns
   # the newly created user ID, or the full REST response if there is an error.
   # For a full list of possible parameters that you can specify, look at
