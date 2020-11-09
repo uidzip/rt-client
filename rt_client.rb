@@ -879,7 +879,7 @@ class RT_Client
   # Helper to replace control characters with string representations
   # When some XML libraries hit these in an XML response, bad things happen.
   def sterilize(str)
-      str.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      str.encode!('UTF-8', str.encoding.to_s, invalid: :replace, undef: :replace, replace: '')
       str.gsub!(0x00.chr,'[NUL]')
       str.gsub!(0x01.chr,'[SOH]')
       str.gsub!(0x02.chr,'[STX]')
